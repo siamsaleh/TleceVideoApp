@@ -1,19 +1,33 @@
 package com.schooling.telecevideoapp.viewModel
 
+import android.app.Application
+import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.schooling.telecevideoapp.model.Video
 import com.schooling.telecevideoapp.helper.ApiFetchListener
 import com.schooling.telecevideoapp.restapi.ApiHelper
+import com.schooling.telecevideoapp.room.VideoRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class MainViewModel() : ViewModel() { //private val repository: VideoRepository
+class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-
+    // Retrofit
     private val videoListLiveData = MutableLiveData<List<Video>>()
     private val statusMessageLiveData = MutableLiveData<String>()
 
-    fun getVideoList() : MutableLiveData<List<Video>> {
+    // Room
+    private var repository = VideoRepository(application.applicationContext)
+    private val videosLiveData = repository.getAllVideosLive()
+
+
+    fun getAllVideosLive(): LiveData<List<Video>> {
+        return videosLiveData
+    }
+    fun getVideoList(): MutableLiveData<List<Video>> {
         return videoListLiveData
     }
 
@@ -21,23 +35,22 @@ class MainViewModel() : ViewModel() { //private val repository: VideoRepository
         return statusMessageLiveData
     }
 
-    fun loadVideoList(){
+    fun loadVideoList() {
         ApiHelper.getVideos(object : ApiFetchListener<List<Video>> {
             override fun onSuccess(responseData: List<Video>) {
                 videoListLiveData.postValue(responseData)
-                /*statusMessageLiveData.postValue(responseData.toString())*/ //TODO
+
+                Log.d("LOAD", "onSuccess: $responseData")
+
+                // Insert video list in room
+                viewModelScope.launch(Dispatchers.IO) {
+                     repository.insertVideos(responseData)
+                }
             }
+
             override fun onError(errorMessage: String, responseCode: Int) {
                 statusMessageLiveData.postValue("Error: $errorMessage, Code: $responseCode")
             }
         })
     }
-
-    /*val videosLiveData = repository.getAllVideosFromDb()*/
-
-    /*fun fetchVideos() {
-        *//*viewModelScope.launch {
-            repository.getVideos()
-        }*//*
-    }*/
 }

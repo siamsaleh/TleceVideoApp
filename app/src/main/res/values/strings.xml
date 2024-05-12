@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TeleceVideoApp</string>
+    <string name="thumbnail_text">thumbnail</string>
+    <string name="play_pause_text">play pause</string>
+    <string name="video_text">video</string>
+    <string name="sample_title_text">Sample Title</string>
+    <string name="sample_description_text">Sample Description</string>
 </resources>

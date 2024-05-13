@@ -12,22 +12,6 @@ abstract class VideoDatabase : RoomDatabase() {
     abstract fun videoDao(): VideoDao
 
     companion object {
-
-        /*private var instance: VideoDatabase? = null
-
-        fun getInstance(context: Context): VideoDatabase {
-
-            if (instance == null) {
-                synchronized(VideoDatabase::class) {
-                    instance = Room.databaseBuilder(
-                        context,
-                        VideoDatabase::class.java, "video_database"
-                    ).build()
-                }
-            }
-            return instance!!
-        }*/
-
         @Volatile
         private var INSTANCE: VideoDatabase? = null
 

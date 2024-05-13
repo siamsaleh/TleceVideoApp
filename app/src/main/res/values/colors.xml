@@ -6,4 +6,5 @@
     <color name="colorPrimary">#3498db</color>
     <color name="white_bg">#FFFFFF</color>
     <color name="screen_bg">#E9E6DF</color>
+    <color name="gray">#dddddd</color>
 </resources>

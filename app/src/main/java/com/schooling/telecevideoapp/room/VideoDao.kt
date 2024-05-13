@@ -14,6 +14,9 @@ interface VideoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(videos: List<Video>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertVideo(videos: Video)
+    @Query("SELECT COUNT(*) FROM videos")
+    suspend fun getVideoCount(): Int
+
+    /*@Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertVideo(videos: Video)*/
 }

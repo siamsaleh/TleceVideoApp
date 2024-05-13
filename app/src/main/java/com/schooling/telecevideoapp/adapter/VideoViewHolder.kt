@@ -12,11 +12,10 @@ import com.schooling.telecevideoapp.R
 
 class VideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val titleText: TextView = itemView.findViewById(R.id.title_txt)
-    val playPauseBtn: ImageView = itemView.findViewById(R.id.play_pause)
+    val description: ExpandableTextView = itemView.findViewById(R.id.description_txt)
 
     val videoView: VideoView = itemView.findViewById(R.id.videoView)
-    val playerView: PlayerView = itemView.findViewById(R.id.player_view)
     val thumbnailView: ImageView = itemView.findViewById(R.id.thumbnail_image)
 
-    val description: ExpandableTextView = itemView.findViewById(R.id.description_txt)
+    val playPauseBtn: ImageView = itemView.findViewById(R.id.play_pause)
 }

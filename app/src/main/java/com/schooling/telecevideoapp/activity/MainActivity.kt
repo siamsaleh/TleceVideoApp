@@ -1,27 +1,29 @@
 package com.schooling.telecevideoapp.activity
 
-import android.Manifest
-import android.Manifest.permission.POST_NOTIFICATIONS
-import android.content.pm.PackageManager
-import android.os.Build
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
-import com.schooling.telecevideoapp.R
 import com.schooling.telecevideoapp.adapter.VideoAdapter
 import com.schooling.telecevideoapp.databinding.ActivityMainBinding
+import com.schooling.telecevideoapp.service.AlarmManagerBroadcast
+import com.schooling.telecevideoapp.service.UploadWorker
 import com.schooling.telecevideoapp.utility.CommonUtils
 import com.schooling.telecevideoapp.viewModel.MainViewModel
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
 
     private lateinit var videoAdapter: VideoAdapter
+
+    private lateinit var uploadWorkRequest: WorkRequest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +45,21 @@ class MainActivity : AppCompatActivity() {
         // Video Table
         initializeDatabase()
 
+        // Check Wifi available or not. Then Update DB
+        workManager()
+
         // FCM Notification
         fcmNotification()
+    }
+
+    private fun workManager() {
+        uploadWorkRequest = OneTimeWorkRequestBuilder<UploadWorker>().build()
+
+        WorkManager
+            .getInstance(this)
+            .enqueue(uploadWorkRequest)
+
+        Log.d("WORK_TAG", "workManager: Executed")
     }
 
     private fun fcmNotification() {
@@ -67,12 +84,10 @@ class MainActivity : AppCompatActivity() {
             val isTableEmpty = viewModel.isVideoTableEmpty()
             if (isTableEmpty) {
                 // Table is empty
-                updateLiveData()
-                /*Log.d("DATABASE_TAG", "onCreate: false")*/
+                updateLiveData()/*Log.d("DATABASE_TAG", "onCreate: false")*/
             } else {
                 // Table has data
-                loadLiveData()
-                /*Log.d("DATABASE_TAG", "onCreate: true")*/
+                loadLiveData()/*Log.d("DATABASE_TAG", "onCreate: true")*/
             }
         }
     }
@@ -88,12 +103,12 @@ class MainActivity : AppCompatActivity() {
     private fun observeLiveData() {
 
         // Get video data from room
-        viewModel.getAllVideosLive().observe(this){
+        viewModel.getAllVideosLive().observe(this) {
 
             // set video adapter
             videoAdapter = VideoAdapter(this, CommonUtils().initGlide(this), it)
-            binding.videoRecyclerview.adapter = videoAdapter
-            /*Log.d("VIDEOS", "observeLiveData: $it")*/
+            binding.videoRecyclerview.adapter =
+                videoAdapter/*Log.d("VIDEOS", "observeLiveData: $it")*/
 
             // Visibility
             binding.loading.visibility = View.GONE

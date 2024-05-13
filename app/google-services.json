@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "432635986983",
+    "project_id": "telecevideoapp",
+    "storage_bucket": "telecevideoapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432635986983:android:34cb7c82e325b61b32fa02",
+        "android_client_info": {
+          "package_name": "com.schooling.telecevideoapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqC7NcRskzzKL2GxyFx7YqdNuSvrVKDvs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

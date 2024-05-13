@@ -61,11 +61,20 @@
             <VideoView
                 android:id="@+id/videoView"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_300sdp"
+                android:layout_height="@dimen/_250sdp"
                 android:contentDescription="@string/video_text"
                 android:src="@color/white"
                 android:visibility="gone"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.exoplayer2.ui.PlayerView
+                android:id="@+id/player_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_250sdp"
+                android:src="@color/white"
+                android:visibility="gone"
+                android:background="@android:color/black"
+                tools:ignore="MissingConstraints" />
 
             <ImageView
                 android:id="@+id/play_pause"
